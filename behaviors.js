@@ -3,25 +3,11 @@
  *
  * @copyright 2007 Dan Yoder, All Rights Reserved
  * @author Dan Yoder <dan@zeraweb.com>
- * @author Stephen Riesenberg <stephen.riesenberg@gmail.com>
+ * @author Stephen Riesenberg <stephen [dot] riesenberg [at] gmail [dot] com>
  * @version 0.6
  * @license MIT
  * @link http://code.google.com/p/cruiser/wiki/Behaviors
  */
-
-// addition to prototype Function extension
-// TODO: Move this
-Function.prototype.rcurry = function() {
-	if (!arguments.length) {
-		return this;
-	}
-	
-	var __method = this, args = $A(arguments);
-	return function() {
-		return __method.apply(this, $A(arguments).concat(args));
-	}
-};
-
 var Behaviors = {
 	load: function() {
 		$A(document.getElementsByTagName("link"))
@@ -37,10 +23,10 @@ var Behaviors = {
 Behaviors.Stylesheet = {
 	test: function(link) {
 		return link.rel == "behaviors";
-	}, 
+	},
 	load: function(url) {
 		new Ajax.Request(url, { method: "get", onSuccess: Behaviors.Stylesheet.process });
-	}, 
+	},
 	process: function(t) {
 		var rules = Behaviors.Stylesheet.parse(t.responseText);
 		$H(rules).each(function(r) {
@@ -55,7 +41,9 @@ Behaviors.Stylesheet = {
 					try {
 						fn ? fn(e, a.value, a.key) : null;
 					} catch(ex) {
-						console.log(ex);
+						if (window.console) {
+							console.log(ex); console.log("@ " + r.key + " { " + a.key + ": " + a.value + "; }");
+						}
 					};
 				});
 			});
@@ -73,7 +61,7 @@ Behaviors.Translator = {
 			
 			return h;
 		});
-	}, 
+	},
 	rules: function(rx) {
 		return rx.inject({}, function(h, r) {
 			if (r) {
@@ -82,7 +70,7 @@ Behaviors.Translator = {
 			
 			return h;
 		});			
-	}, 
+	},
 	parse: function(rx) {
 		return rx.inject({}, function(h, r) {
 			for (var key in r) {
@@ -179,9 +167,10 @@ Behaviors.Attributes = (function() {
 	 * @param fname
 	 * @param handler
 	 */
-	function event(e, v, h) {
+	function observe(e, v, h) {
 		e.observe(h, e.binding[v].bind(e.binding));
 	}
+	
 	/**
 	 * Adds relative attributes: height, width ...
 	 *
@@ -200,6 +189,7 @@ Behaviors.Attributes = (function() {
 			fn(e, a, s);
 		}
 	}
+	
 	function parseFunction(s) {
 		return s.match(/(\w+)\s*\(\s*([^\)]+)\s*\)/);
 	}
@@ -215,12 +205,12 @@ Behaviors.Attributes = (function() {
 			if (fn) {
 				fn(e, x);
 			}
-		}, 
+		},
 		load: function(e, v) {
 			if (e.binding[v]) {
 				e.binding[v](e);
 			}
-		}, 
+		},
 		hasFocus: function(e, v) {
 			v = v.toLowerCase();
 			if (v == "true" || v == "yes") {
@@ -229,8 +219,8 @@ Behaviors.Attributes = (function() {
 		}
 	};
 	
-	$w("blur change click dblclick focus keydown keypress keyup mousedown mousemove mouseout mouseover mouseup resize").each(function(s) {
-		a[s] = event.rcurry(s);
+	$w("blur change click dblclick contextmenu focus keydown keypress keyup mousedown mousemove mouseout mouseover mouseup resize").each(function(s) {
+		a[s] = observe.rcurry(s);
 	});
 	$w("height width").each(function(s) {
 		a[s] = relative.rcurry(s);
@@ -238,5 +228,16 @@ Behaviors.Attributes = (function() {
 	
 	return a;
 })();
+
+Function.prototype.rcurry = function() {
+	if (!arguments.length) {
+		return this;
+	}
+	
+	var __method = this, args = $A(arguments);
+	return function() {
+		return __method.apply(this, $A(arguments).concat(args));
+	}
+};
 
 document.observe("dom:loaded", Behaviors.load);
