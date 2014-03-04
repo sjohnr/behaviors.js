@@ -10,24 +10,46 @@
  * @link https://github.com/sjohnr/behaviors.js
  */
 var Behaviors = {
+	/**
+	 * Load and process Behaviors Stylesheets.
+	 */
 	load: function() {
 		$A(document.getElementsByTagName("link"))
 			.select(Behaviors.Stylesheet.test)
 			.pluck("href")
 			.map(Behaviors.process);
 	},
+	/**
+	 * Load an individual Behaviors Stylesheet file by URL.
+	 */
 	process: function(href) {
 		Behaviors.Stylesheet.load(href);
 	}
 };
 
 Behaviors.Stylesheet = {
+	/**
+	 * Determine if the given <link> element is a Behaviors Stylesheet.
+	 * 
+	 * @param link A <link> element to test
+	 */
 	test: function(link) {
 		return link.rel == "behaviors";
 	},
+	/**
+	 * Load the contents of a Behaviors Styleseheet via Ajax
+	 * and process the result.
+	 * 
+	 * @param url The URL to load
+	 */
 	load: function(url) {
 		new Ajax.Request(url, { method: "get", onSuccess: Behaviors.Stylesheet.process });
 	},
+	/**
+	 * Process an Ajax response as a Behaviors Stylesheet.
+	 * 
+	 * @param t The Ajax response object
+	 */
 	process: function(t) {
 		var rules = Behaviors.Stylesheet.parse(t.responseText);
 		$H(rules).each(function(r) {
@@ -41,21 +63,32 @@ Behaviors.Stylesheet = {
 					var fn = Behaviors.Attributes[a.key.camelize()];
 					try {
 						fn ? fn(e, a.value, a.key) : null;
-					} catch(ex) {
+					} catch (ex) {
 						if (window.console) {
-							console.log(ex); console.log("@ " + r.key + " { " + a.key + ": " + a.value + "; }");
+							console.log(ex);
+							console.log("@ " + r.key + " { " + a.key + ": " + a.value + "; }");
 						}
 					};
 				});
 			});
 		});
 	},
+	/**
+	 * Parse a Behaviors Stylesheet.
+	 * 
+	 * @param s The contents of the stylesheet file
+	 */
 	parse: function(s) {
 		return Behaviors.Stylesheet._parse(s).first();
 	}
 };
 
 Behaviors.Translator = {
+	/**
+	 * Translate style attributes an associative array.
+	 * 
+	 * @param attrs The attributes parse tree
+	 */
 	style: function(attrs) {
 		return attrs.inject({}, function(h, a) {
 			h[a[0]] = a[1];
@@ -63,6 +96,11 @@ Behaviors.Translator = {
 			return h;
 		});
 	},
+	/**
+	 * Translate rules to an associative array.
+	 * 
+	 * @param rx The rules parse tree
+	 */
 	rules: function(rx) {
 		return rx.inject({}, function(h, r) {
 			if (r) {
@@ -71,15 +109,6 @@ Behaviors.Translator = {
 			
 			return h;
 		});			
-	},
-	parse: function(rx) {
-		return rx.inject({}, function(h, r) {
-			for (var key in r) {
-				h[key] = r[key];
-			}
-			
-			return h;
-		})						
 	}
 };
 
