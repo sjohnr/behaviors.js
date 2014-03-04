@@ -1,12 +1,13 @@
 /**
  * JavaScript Behaviors Library
  *
- * @copyright 2007 Dan Yoder, All Rights Reserved
+ * @copyright 2014 Stephen Riesenberg, All Rights Reserved
  * @author Dan Yoder <dan@zeraweb.com>
- * @author Stephen Riesenberg <stephen [dot] riesenberg [at] gmail [dot] com>
- * @version 0.6
+ * @author Stephen Riesenberg
+ * @version 0.7
  * @license MIT
  * @link http://code.google.com/p/cruiser/wiki/Behaviors
+ * @link https://github.com/sjohnr/behaviors.js
  */
 var Behaviors = {
 	load: function() {
@@ -82,31 +83,37 @@ Behaviors.Translator = {
 	}
 };
 
-Behaviors.Grammar = (function() {
-	var g = {}, t = Behaviors.Translator, o = Parsing.Operators;
+Behaviors.Grammar = {};
+(function() {
+	var g = Behaviors.Grammar, s = Behaviors.Stylesheet, t = Behaviors.Translator, o = Parsing.Operators;
+	
 	// basic tokens
-	g.lbrace = o.token("{"); g.rbrace = o.token("}");
-	g.lparen = o.token(/\(/); g.rparen = o.token(/\)/);
-	g.colon = o.token(":"); g.semicolon = o.token(";");
+	g.lbrace = o.token("{");
+	g.rbrace = o.token("}");
+	g.lparen = o.token(/\(/);
+	g.rparen = o.token(/\)/);
+	g.colon = o.token(":");
+	g.semicolon = o.token(";");
 	// comments
 	g.inlineComment = o.token(/\x2F\x2F[^\n]*\n/);
 	g.multilineComment = o.token(/\x2F\x2A(.|\n)*?\x2A\x2F/);
 	g.comments = o.ignore(o.any(g.inlineComment, g.multilineComment));
 	// attributes
-	g.attrName = o.token(/[\w\-\d]+/); g.attrValue = o.token(/[^;\}]+/);
+	g.attrName = o.token(/[\w\-\d]+/);
+	g.attrValue = o.token(/[^;\}]+/);
 	g.attr = o.pair(g.attrName, g.attrValue, g.colon);
 	g.attrList = o.list(g.attr, g.semicolon, true);
 	g.style = o.process(o.between(g.lbrace, g.attrList, g.rbrace), t.style);
 	// style rules
 	g.selector = o.token(/[^\{]+/);
-	g.rule = o.any(g.comments, o.each(g.selector, g.style)); g.rules = o.process(o.many(g.rule), t.rules);
+	g.rule = o.any(g.comments, o.each(g.selector, g.style));
+	g.rules = o.process(o.many(g.rule), t.rules);
 	// parser
-	Behaviors.Stylesheet._parse = g.rules;
-	
-	return g;
+	s._parse = g.rules;
 })();
 
-Behaviors.Bindings = (function() {
+Behaviors.Bindings = {};
+(function() {
 	/**
 	 * Set the binding property of an object
 	 *
@@ -117,7 +124,7 @@ Behaviors.Bindings = (function() {
 		o.binding = ((t instanceof Element) && t.binding) ? t.binding : t;
 	}
 	
-	return {
+	Object.extend(Behaviors.Bindings, {
 		"new":      function(e, x) { bind(e, eval("new "+x+"(e)")); },
 		"object":   function(e, x) { bind(e, eval(x)); },
 		"select":   function(e, x) { bind(e, $$(x)[0]); },
@@ -125,10 +132,11 @@ Behaviors.Bindings = (function() {
 		"down":     function(e, x) { bind(e, e.down(x)); },
 		"previous": function(e, x) { bind(e, e.previous(x)); },
 		"next":     function(e, x) { bind(e, e.next(x)); }
-	};
+	});
 })();
 
-Behaviors.Relative = (function() {
+Behaviors.Relative = {};
+(function() {
 	/**
 	 * adds relative attribute functions: minimum, maximum, equal
 	 *
@@ -144,7 +152,7 @@ Behaviors.Relative = (function() {
 		}
 	}
 	
-	return $H({
+	Object.extend(Behaviors.Relative, $H({
 		minimum: function(a, b) {
 			return a < b;
 		},
@@ -156,10 +164,11 @@ Behaviors.Relative = (function() {
 		}
 	}).inject({}, function(r, h) {
 		return r[h.key] = apply.rcurry(h.value);
-	});
+	}));
 })();
 
-Behaviors.Attributes = (function() {
+Behaviors.Attributes = {};
+(function() {
 	/**
 	 * Adds an event handler to the element: blur, change, click, etc.
 	 *
@@ -194,7 +203,7 @@ Behaviors.Attributes = (function() {
 		return s.match(/(\w+)\s*\(\s*([^\)]+)\s*\)/);
 	}
 	
-	var a = {
+	var a = Object.extend(Behaviors.Attributes, {
 		binding: function(e, v) {
 			var f = parseFunction(v);
 			if (!f) {
@@ -217,7 +226,7 @@ Behaviors.Attributes = (function() {
 				e.focus();
 			}
 		}
-	};
+	});
 	
 	$w("blur change click dblclick contextmenu focus keydown keypress keyup mousedown mousemove mouseout mouseover mouseup resize").each(function(s) {
 		a[s] = observe.rcurry(s);
@@ -225,8 +234,6 @@ Behaviors.Attributes = (function() {
 	$w("height width").each(function(s) {
 		a[s] = relative.rcurry(s);
 	});
-	
-	return a;
 })();
 
 Function.prototype.rcurry = function() {
