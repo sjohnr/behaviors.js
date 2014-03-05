@@ -169,12 +169,12 @@ Behaviors.Relative = {};
 	/**
 	 * adds relative attribute functions: minimum, maximum, equal
 	 *
+	 * @param comparator
 	 * @param element
 	 * @param attribute
 	 * @param selector
-	 * @param comparator
 	 */
-	function apply(e1, a, s, c) {
+	function apply(c, e1, a, s) {
 		var e2 = $$(s)[0]; if (!e2) return;
 		if (c(parseInt(e1.getStyle(a)), parseInt(e2.getStyle(a)))) { 
 			e1.style[a] = e2.getStyle(a) ;
@@ -192,7 +192,7 @@ Behaviors.Relative = {};
 			return a == b;
 		}
 	}).inject({}, function(r, h) {
-		return r[h.key] = apply.rcurry(h.value);
+		return r[h.key] = apply.curry(h.value);
 	}));
 })();
 
@@ -201,22 +201,22 @@ Behaviors.Attributes = {};
 	/**
 	 * Adds an event handler to the element: blur, change, click, etc.
 	 *
+	 * @param handler
 	 * @param element
 	 * @param fname
-	 * @param handler
 	 */
-	function observe(e, v, h) {
+	function observe(h, e, v) {
 		e.observe(h, e.binding[v].bind(e.binding));
 	}
 	
 	/**
 	 * Adds relative attributes: height, width ...
 	 *
+	 * @param attribute
 	 * @param element
 	 * @param function
-	 * @param attribute
 	 */
-	function relative(e, v, a) {
+	function relative(a, e, v) {
 		var f = parseFunction(v);
 		if (!f) {
 			return;
@@ -258,22 +258,11 @@ Behaviors.Attributes = {};
 	});
 	
 	$w("blur change click dblclick contextmenu focus keydown keypress keyup mousedown mousemove mouseout mouseover mouseup resize").each(function(s) {
-		a[s] = observe.rcurry(s);
+		a[s] = observe.curry(s);
 	});
 	$w("height width").each(function(s) {
-		a[s] = relative.rcurry(s);
+		a[s] = relative.curry(s);
 	});
 })();
-
-Function.prototype.rcurry = function() {
-	if (!arguments.length) {
-		return this;
-	}
-	
-	var __method = this, args = $A(arguments);
-	return function() {
-		return __method.apply(this, $A(arguments).concat(args));
-	}
-};
 
 document.observe("dom:loaded", Behaviors.load);
