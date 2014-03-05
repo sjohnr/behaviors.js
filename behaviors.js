@@ -2,7 +2,7 @@
  * JavaScript Behaviors Library
  *
  * @copyright 2014 Stephen Riesenberg, All Rights Reserved
- * @author Dan Yoder <dan@zeraweb.com>
+ * @author Dan Yoder
  * @author Stephen Riesenberg
  * @version 0.7
  * @license MIT
@@ -146,8 +146,8 @@ Behaviors.Bindings = {};
 	/**
 	 * Set the binding property of an object
 	 *
-	 * @param object
-	 * @param target
+	 * @param o The object or element to bind to
+	 * @param t The target object or element being bound
 	 */
 	function bind(o, t) {
 		o.binding = ((t instanceof Element) && t.binding) ? t.binding : t;
@@ -165,45 +165,29 @@ Behaviors.Bindings = {};
 })();
 
 Behaviors.Relative = {};
+Behaviors.Attributes = {};
 (function() {
 	/**
-	 * adds relative attribute functions: minimum, maximum, equal
+	 * Adds relative attribute functions: minimum, maximum, equal.
 	 *
-	 * @param comparator
-	 * @param element
-	 * @param attribute
-	 * @param selector
+	 * @param c The comparator function
+	 * @param a The attribute name
+	 * @param e1 The first element (the element to act upon)
+	 * @param s The selector to evaluate as an element to compare to
 	 */
-	function apply(c, e1, a, s) {
+	function apply(c, a, e1, s) {
 		var e2 = $$(s)[0]; if (!e2) return;
 		if (c(parseInt(e1.getStyle(a)), parseInt(e2.getStyle(a)))) { 
 			e1.style[a] = e2.getStyle(a) ;
 		}
 	}
 	
-	Object.extend(Behaviors.Relative, $H({
-		minimum: function(a, b) {
-			return a < b;
-		},
-		maximum: function(a, b) {
-			return a > b;
-		},
-		equal: function(a, b) {
-			return a == b;
-		}
-	}).inject({}, function(r, h) {
-		return r[h.key] = apply.curry(h.value);
-	}));
-})();
-
-Behaviors.Attributes = {};
-(function() {
 	/**
 	 * Adds an event handler to the element: blur, change, click, etc.
 	 *
-	 * @param handler
-	 * @param element
-	 * @param fname
+	 * @param h The handler
+	 * @param e The element
+	 * @param v The function name to invoke
 	 */
 	function observe(h, e, v) {
 		e.observe(h, e.binding[v].bind(e.binding));
@@ -212,9 +196,9 @@ Behaviors.Attributes = {};
 	/**
 	 * Adds relative attributes: height, width ...
 	 *
-	 * @param attribute
-	 * @param element
-	 * @param function
+	 * @param a The attribute name
+	 * @param e The element
+	 * @param v The function spec, e.g. "minimum( div.sidebar )"
 	 */
 	function relative(a, e, v) {
 		var f = parseFunction(v);
@@ -224,7 +208,7 @@ Behaviors.Attributes = {};
 		var fname = f[1]; var s = f[2];
 		var fn = Behaviors.Relative[fname];
 		if (fn) {
-			fn(e, a, s);
+			fn(a, e, s);
 		}
 	}
 	
@@ -232,7 +216,27 @@ Behaviors.Attributes = {};
 		return s.match(/(\w+)\s*\(\s*([^\)]+)\s*\)/);
 	}
 	
-	var a = Object.extend(Behaviors.Attributes, {
+	//
+	// Comparator functions
+	//
+	Object.extend(Behaviors.Relative, $H({
+		"minimum": function(a, b) { return a < b; },
+		"maximum": function(a, b) { return a > b; },
+		"equal":   function(a, b) { return a == b; }
+	}).inject({}, function(r, h) {
+		return r[h.key] = apply.curry(h.value);
+	}));
+	
+	//
+	// Core attribute functions
+	//
+	Object.extend(Behaviors.Attributes, {
+		/**
+		 * Adds a binding to an element.
+		 * 
+		 * @param e The element
+		 * @param v The function spec, e.g. "new( TabControl )"
+		 */
 		binding: function(e, v) {
 			var f = parseFunction(v);
 			if (!f) {
@@ -244,11 +248,23 @@ Behaviors.Attributes = {};
 				fn(e, x);
 			}
 		},
+		/**
+		 * Adds a callback when the element is loaded.
+		 * 
+		 * @param e The element
+		 * @param v The function, e.g. "addMenuItem"
+		 */
 		load: function(e, v) {
 			if (e.binding[v]) {
 				e.binding[v](e);
 			}
 		},
+		/**
+		 * Give an element focus.
+		 * 
+		 * @param e The element
+		 * @param v Dummy argument, "true" or "yes"
+		 */
 		hasFocus: function(e, v) {
 			v = v.toLowerCase();
 			if (v == "true" || v == "yes") {
@@ -257,11 +273,18 @@ Behaviors.Attributes = {};
 		}
 	});
 	
+	//
+	// Meta functions for observing events
+	//
 	$w("blur change click dblclick contextmenu focus keydown keypress keyup mousedown mousemove mouseout mouseover mouseup resize").each(function(s) {
-		a[s] = observe.curry(s);
+		Behaviors.Attributes[s] = observe.curry(s);
 	});
+	
+	//
+	// Meta functions for maintaining relative size
+	//
 	$w("height width").each(function(s) {
-		a[s] = relative.curry(s);
+		Behaviors.Attributes[s] = relative.curry(s);
 	});
 })();
 
