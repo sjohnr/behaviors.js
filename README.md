@@ -73,6 +73,15 @@ a.menu-item { binding: object( MainMenu ); load: addMenuItem; }
 
 **Note:** With binding and load, order does matter, since both attributes are processed as they are parsed. So if you are depending on the binding for your load method, make sure you put the binding attribute first.
 
+Has-Focus Attribute
+-------------------
+
+Ensure that an element has focus on page load (as above, actually the point the attribute is processed).
+
+```javascript
+input.user-name { hasFocus: true; load: highlight; }
+```
+
 Event Attributes
 ----------------
 
