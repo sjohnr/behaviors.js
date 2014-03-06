@@ -3,7 +3,7 @@ behaviors.js
 
 A library for implementing Behaviors Stylesheets (BSS) for attaching behaviors to pages with unobtrusive JavaScript. This library is based on the work of Dan Yoder in the Cruiser.Behaviors library, which was inspired by Ben Nolan's own Behaviours library.
 
-**Note:** The following was adapted from https://code.google.com/p/cruiser/wiki/Behaviors
+**Note:** The following was adapted from [this wiki page](https://code.google.com/p/cruiser/wiki/Behaviors)
 
 Introduction
 ============
@@ -18,16 +18,27 @@ For example, you can add a mouseover handler to show a preview window for all li
 a.preview { mouseover: preview; }
 ```
 
+The benefit of using BSS is two-fold:
+
+* Your Javascript can now focus more or less on the interfaces you want your DOM elements to support. You don’t need to clutter up your Javascript with the mappings between elements and methods / functions. 
+* You can push out design-centric Javascript to the designer. In the ‘preview’ example above, you can let the CSS designer decide which links should provide a preview, rather than embedding that in your Javascript. 
+
+Usage
+=====
+
+behaviors.js uses [prototype.js](http://prototypejs.org/) 1.6+. Include it in the head of your page, along with [parser-generator.js](https://github.com/sjohnr/parser-generator.js) as follows:
+
+```html
+<script src="https://ajax.googleapis.com/ajax/libs/prototype/1.7.1.0/prototype.js"></script>
+<script src="https://raw.github.com/sjohnr/parser-generator.js/master/parsing.js"></script>
+<script src="https://raw.github.com/sjohnr/behaviors.js/master/behaviors.js"></script>
+```
+
 You can load a BSS file pretty much the same way you load a CSS file: with a `<link>` tag. For example:
 
 ```html
 <link rel="behaviors" href="my-behaviors.bss">
 ```
-
-The benefit of using BSS is two-fold:
-
-* Your Javascript can now focus more or less on the interfaces you want your DOM elements to support. You don’t need to clutter up your Javascript with the mappings between elements and methods / functions. 
-* You can push out design-centric Javascript to the designer. In the ‘preview’ example above, you can let the CSS designer decide which links should provide a preview, rather than embedding that in your Javascript. 
 
 Attributes
 ==========
