@@ -70,8 +70,6 @@ a.tab { binding: up( div.tabs ); click: select }
   * Binds to the first descendant element matching the given selector.
 * `next( selector )`
   * Binds to the first sibling after the element that matches the given selector.
-* `next( selector )`
-  * Binds to the first sibling before the element that matches the given selector. 
 
 Load Attribute
 --------------
