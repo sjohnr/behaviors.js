@@ -37,7 +37,7 @@ behaviors.js uses [prototype.js](http://prototypejs.org/) 1.6+. Include it in th
 You can load a BSS file pretty much the same way you load a CSS file: with a `<link>` tag. For example:
 
 ```html
-<link rel="behaviors" href="my-behaviors.bss">
+<link rel="behaviors" href="my-behaviors.bss" />
 ```
 
 Attributes
