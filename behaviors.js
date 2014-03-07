@@ -109,12 +109,24 @@ Behaviors.Translator = {
 			
 			return h;
 		});			
+	},
+	/**
+	 * Merge lists of rules together after ignoring comments.
+	 * 
+	 * @param rx The rules lists to merge
+	 */
+	parse: function(rx) {
+		return rx.inject($H({}), function(h, r) {
+			h.merge(r);
+			
+			return h;
+		});
 	}
 };
 
 Behaviors.Grammar = {};
 (function() {
-	var g = Behaviors.Grammar, s = Behaviors.Stylesheet, t = Behaviors.Translator, o = Parsing.Operators;
+	var g = Behaviors.Grammar, s = Behaviors.Stylesheet, t = Behaviors.Translator, o = Parser.Operators;
 	
 	// basic tokens
 	g.lbrace = o.token("{");
@@ -135,10 +147,10 @@ Behaviors.Grammar = {};
 	g.style = o.process(o.between(g.lbrace, g.attrList, g.rbrace), t.style);
 	// style rules
 	g.selector = o.token(/[^\{]+/);
-	g.rule = o.any(g.comments, o.each(g.selector, g.style));
+	g.rule = o.each(g.selector, g.style);
 	g.rules = o.process(o.many(g.rule), t.rules);
 	// parser
-	s._parse = g.rules;
+	s._parse = o.process(many(any(g.comments, g.rules)), t.parse);
 })();
 
 Behaviors.Bindings = {};
