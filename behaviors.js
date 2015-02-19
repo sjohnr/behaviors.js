@@ -234,7 +234,7 @@ Behaviors.Attributes = {};
 	Object.extend(Behaviors.Relative, $H({
 		"minimum": function(a, b) { return a < b; },
 		"maximum": function(a, b) { return a > b; },
-		"equal":   function(a, b) { return a == b; }
+		"equals":   function(a, b) { return a == b; }
 	}).inject({}, function(r, h) {
 		return r[h.key] = apply.curry(h.value);
 	}));
