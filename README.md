@@ -64,10 +64,14 @@ a.tab { binding: up( div.tabs ); click: select }
   * Constructor is passed the original element.
 * `object( object )`
   * Binds to the given object.
+* `select( object )`
+  * Binds to the first element matching the given selector.
 * `up( selector )`
   * Binds to the first ancestor element matching the given selector.
 * `down( selector )`
   * Binds to the first descendant element matching the given selector.
+* `previous( selector )`
+  * Binds to the first sibling prior to the element that matches the given selector.
 * `next( selector )`
   * Binds to the first sibling after the element that matches the given selector.
 
