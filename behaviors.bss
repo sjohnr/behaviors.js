@@ -1,0 +1,7 @@
+/* create a submit button */
+a.save {
+    /* a comment inside the rule */
+    binding: up(form);
+    // another comment inside the rule
+    click: submit;
+}

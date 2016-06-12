@@ -1,7 +1,7 @@
 (function() {
 
-  var prototype = require("prototype");
-  Object.extend(global, prototype);
+  // var prototype = require("prototype4node");
+  // Object.extend(global, prototype);
 
   var Parser = require("parser-generator");
 
@@ -24,7 +24,7 @@
       $A(document.getElementsByTagName("link"))
           .select(Behaviors.Stylesheet.test)
           .pluck("href")
-          .map(Behaviors.process);
+          .each(Behaviors.process);
     },
     /**
      * Load an individual Behaviors Stylesheet file by URL.
@@ -96,9 +96,11 @@
      *
      * @param attrs The attributes parse tree
      */
-    style: function(attrs) {
-      return attrs.inject({}, function(h, a) {
-        h[a[0]] = a[1];
+    style: function (attrs) {
+      return attrs.inject({}, function (h, a) {
+        if (a) {
+          h[a[0]] = a[2];
+        }
 
         return h;
       });
@@ -108,23 +110,11 @@
      *
      * @param rx The rules parse tree
      */
-    rules: function(rx) {
-      return rx.inject({}, function(h, r) {
+    rules: function (rx) {
+      return rx.inject({}, function (h, r) {
         if (r) {
           h[r[0]] = r[1];
         }
-
-        return h;
-      });
-    },
-    /**
-     * Merge lists of rules together after ignoring comments.
-     *
-     * @param rx The rules lists to merge
-     */
-    parse: function(rx) {
-      return rx.inject($H({}), function(h, r) {
-        h.merge(r);
 
         return h;
       });
@@ -149,15 +139,15 @@
     // attributes
     g.attrName = o.token(/[\w\-\d]+/);
     g.attrValue = o.token(/[^;\}]+/);
-    g.attr = o.pair(g.attrName, g.attrValue, g.colon);
-    g.attrList = o.list(g.attr, g.semicolon, true);
+    g.attr = o.each(g.attrName, g.colon, g.attrValue, g.semicolon);
+    g.attrList = o.many(o.any(g.comments, g.attr));
     g.style = o.process(o.between(g.lbrace, g.attrList, g.rbrace), t.style);
     // style rules
     g.selector = o.token(/[^\{]+/);
-    g.rule = o.each(g.selector, g.style);
+    g.rule = o.any(g.comments, o.each(g.selector, g.style));
     g.rules = o.process(o.many(g.rule), t.rules);
     // parser
-    s._parse = o.process(o.many(any(g.comments, g.rules)), t.parse);
+    s._parse = g.rules;
   })();
 
   Behaviors.Bindings = {};
@@ -312,9 +302,10 @@
     module.exports = Parser;
   } else {
     window.Parser = Parser;
-
-    // loaded as <script> tag, automatically run load
-    document.observe("dom:loaded", Behaviors.load);
   }
 
+  // register onload event
+  if (typeof window !== 'undefined') {
+    window.addEventListener("load", Behaviors.load);
+  }
 })();

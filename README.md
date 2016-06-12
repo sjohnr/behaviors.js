@@ -30,7 +30,7 @@ behaviors.js uses [prototype.js](http://prototypejs.org/) 1.6+. Include it in th
 
 ```html
 <script src="https://ajax.googleapis.com/ajax/libs/prototype/1.7.1.0/prototype.js"></script>
-<script src="https://raw.github.com/sjohnr/parser-generator.js/master/parsing.js"></script>
+<script src="https://raw.github.com/sjohnr/parser-generator.js/master/parser-generator.js"></script>
 <script src="https://raw.github.com/sjohnr/behaviors.js/master/behaviors.js"></script>
 ```
 
