@@ -2,9 +2,9 @@
   "name": "behaviors.js",
   "version": "0.2.0",
   "description": "A library for implementing Behaviors Stylesheets (BSS) for attaching behaviors to pages with unobtrusive JavaScript.",
-  "main": "behaviors.js",
+  "main": "src/main/js/behaviors.js",
   "scripts": {
-    "pack": "browserify -e behaviours.js -o bundle.js",
+    "pack": "browserify -e src/main/js/behaviours.js -o bundle.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
