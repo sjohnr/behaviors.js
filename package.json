@@ -26,6 +26,5 @@
   },
   "homepage": "https://github.com/sjohnr/behaviors.js#readme",
   "dependencies": {
-    "prototype4node": "0.0.3-0"
   }
 }
