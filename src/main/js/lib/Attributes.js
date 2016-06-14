@@ -1,5 +1,6 @@
 "use strict";
 
+var $ = require("jquery");
 var _ = require("underscore");
 var Bindings = require("./Bindings");
 var Relative = require("./Relative");
@@ -12,7 +13,7 @@ var Relative = require("./Relative");
  * @param v The function name to invoke
  */
 function observe(h, e, v) {
-  e.observe(h, _.bind(e.binding[v], e.binding));
+  $(e).on(h, _.bind(e.binding[v], e.binding));
 }
 
 /**
