@@ -1,5 +1,8 @@
 "use strict";
 
+var $ = require("jquery");
+var _ = require("underscore");
+
 /**
  * Set the binding property of an object
  *
@@ -13,11 +16,11 @@ function bind(o, t) {
 var Bindings = {
   "new":      function(e, x) { bind(e, eval("new "+x+"(e)")); },
   "object":   function(e, x) { bind(e, eval(x)); },
-  "select":   function(e, x) { bind(e, $$(x)[0]); },
-  "up":       function(e, x) { bind(e, e.up(x)); },
-  "down":     function(e, x) { bind(e, e.down(x)); },
-  "previous": function(e, x) { bind(e, e.previous(x)); },
-  "next":     function(e, x) { bind(e, e.next(x)); }
+  "select":   function(e, x) { bind(e, _.first($(x))); },
+  "up":       function(e, x) { bind(e, _.first($(e).closest(x))); },
+  "down":     function(e, x) { bind(e, _.first($(e).find(x))); },
+  "previous": function(e, x) { bind(e, _.first($(e).prevAll(x))); },
+  "next":     function(e, x) { bind(e, _.first($(e).nextAll(x))); }
 };
 
 console.log("Loaded Bindings module");

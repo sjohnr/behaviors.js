@@ -1,5 +1,11 @@
 "use strict";
 
+var http = require("http");
+var $ = require("jquery");
+var _ = require("underscore");
+var _camelize = require("underscore.string/camelize");
+_.camelize = _camelize;
+
 var Grammar = require("./Grammar");
 var Attributes = require("./Attributes");
 
@@ -19,30 +25,29 @@ var Stylesheet = {
    * @param url The URL to load
    */
   load: function(url) {
-    new Ajax.Request(url, { method: "get", onSuccess: Stylesheet.process });
+    $.get(url, {}, Stylesheet.process);
   },
   /**
    * Process an Ajax response as a Behaviors Stylesheet.
    *
-   * @param t The Ajax response object
+   * @param response The Ajax response
    */
-  process: function(t) {
-    var rules = Stylesheet.parse(t.responseText);
-    $H(rules).each(function(r) {
-      var elements = $$(r.key);
-      var attributes = r.value;
-      elements.each(function(e) {
+  process: function(response) {
+    var rules = Stylesheet.parse(response);
+    _.each(rules, function(attributes, selector) {
+      var elements = $(selector);
+      _.each(elements, function(e) {
         if (!e.binding) {
           e.binding = e;
         }
-        $H(attributes).each(function(a) {
-          var fn = Attributes[a.key.camelize()];
+        _.each(attributes, function(value, name) {
+          var fn = Attributes[_.camelize(name)];
           try {
-            fn ? fn(e, a.value, a.key) : null;
+            fn ? fn(e, value, name) : null;
           } catch (ex) {
             if (window.console) {
               console.log(ex);
-              console.log("@ " + r.key + " { " + a.key + ": " + a.value + "; }");
+              console.log("@ " + selector + " { " + name + ": " + value + "; }");
             }
           }
         });
@@ -55,7 +60,7 @@ var Stylesheet = {
    * @param s The contents of the stylesheet file
    */
   parse: function(s) {
-    return Grammar.parse(s).first();
+    return _.first(Grammar.parse(s));
   }
 };
 

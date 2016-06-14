@@ -92,7 +92,7 @@ Has-Focus Attribute
 Ensure that an element has focus on page load (as above, actually the point the attribute is processed).
 
 ```javascript
-input.user-name { hasFocus: true; load: highlight; }
+input.user-name { has-focus: true; load: highlight; }
 ```
 
 Event Attributes

@@ -1,8 +1,5 @@
 (function() {
 
-  // var prototype = require("prototype4node");
-  // Object.extend(global, prototype);
-
   var Behaviors = require("./lib/Behaviors");
   Behaviors.Stylesheet = require("./lib/Stylesheet");
   Behaviors.Translator = require("./lib/Translator");
@@ -12,14 +9,15 @@
   Behaviors.Attributes = require("./lib/Attributes");
 
   // export module
-  if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
+  if (typeof module !== "undefined" && typeof module.exports !== "undefined") {
     module.exports = Behaviors;
   } else {
     window.Behaviors = Behaviors;
   }
 
   // register onload event
-  if (typeof window !== 'undefined') {
+  if (typeof window !== "undefined") {
     window.addEventListener("load", Behaviors.load);
   }
+
 })();

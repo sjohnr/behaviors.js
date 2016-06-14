@@ -1,5 +1,7 @@
 "use strict";
 
+var _ = require("underscore");
+
 var Stylesheet = require("./Stylesheet");
 
 /**
@@ -18,10 +20,11 @@ var Behaviors = {
    * Load and process Behaviors Stylesheets.
    */
   load: function() {
-    $A(document.getElementsByTagName("link"))
-        .select(Stylesheet.test)
+    _.chain(document.getElementsByTagName("link"))
+        .filter(Stylesheet.test)
         .pluck("href")
-        .each(Behaviors.process);
+        .each(Behaviors.process)
+        .value();
   },
   /**
    * Load an individual Behaviors Stylesheet file by URL.

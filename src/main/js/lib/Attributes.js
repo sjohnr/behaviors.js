@@ -1,5 +1,6 @@
 "use strict";
 
+var _ = require("underscore");
 var Bindings = require("./Bindings");
 var Relative = require("./Relative");
 
@@ -11,7 +12,7 @@ var Relative = require("./Relative");
  * @param v The function name to invoke
  */
 function observe(h, e, v) {
-  e.observe(h, e.binding[v].bind(e.binding));
+  e.observe(h, _.bind(e.binding[v], e.binding));
 }
 
 /**
@@ -80,18 +81,22 @@ var Attributes = {
   }
 };
 
+function $w(s) {
+  return _(s.split(" "));
+}
+
 //
 // Meta functions for observing events
 //
 $w("blur change click dblclick contextmenu focus keydown keypress keyup mousedown mousemove mouseout mouseover mouseup resize").each(function(s) {
-  Attributes[s] = observe.curry(s);
+  Attributes[s] = _.partial(observe, s);
 });
 
 //
 // Meta functions for maintaining relative size
 //
 $w("height width").each(function(s) {
-  Attributes[s] = relative.curry(s);
+  Attributes[s] = _.partial(relative, s);
 });
 
 console.log("Loaded Attributes module");

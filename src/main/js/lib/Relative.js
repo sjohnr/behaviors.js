@@ -1,7 +1,10 @@
 "use strict";
 
+var $ = require("jquery");
+var _ = require("underscore");
+
 /**
- * Adds relative attribute functions: minimum, maximum, equal.
+ * Adds relative attribute functions: minimum, maximum, equals.
  *
  * @param c The comparator function
  * @param a The attribute name
@@ -9,19 +12,22 @@
  * @param s The selector to evaluate as an element to compare to
  */
 function apply(c, a, e1, s) {
-  var e2 = $$(s)[0]; if (!e2) return;
-  if (c(parseInt(e1.getStyle(a)), parseInt(e2.getStyle(a)))) {
-    e1.style[a] = e2.getStyle(a) ;
+  var e2 = _.first($(s)); if (!e2) return;
+  if (c(parseInt(e1.css(a)), parseInt(e2.css(a)))) {
+    e1.css(a, e2.css(a));
   }
 }
 
-var Relative = $H({
+var Relative = _.reduce({
   "minimum": function(a, b) { return a < b; },
   "maximum": function(a, b) { return a > b; },
-  "equals":   function(a, b) { return a == b; }
-}).inject({}, function(r, h) {
-  return r[h.key] = apply.curry(h.value);
-});
+  "equals":  function(a, b) { return a == b; }
+}, function(h, fn, a) {
+  return h[a] = _.partial(apply, fn);
+}, {});
+
+// alias equals
+Relative.equal = Relative.equals;
 
 console.log("Loaded Relative module");
 module.exports = Relative;

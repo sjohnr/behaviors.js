@@ -1,5 +1,7 @@
 "use strict";
 
+var _ = require("underscore");
+
 var Translator = {
   /**
    * Translate style attributes an associative array.
@@ -7,13 +9,13 @@ var Translator = {
    * @param attrs The attributes parse tree
    */
   style: function (attrs) {
-    return attrs.inject({}, function (h, a) {
+    return _.reduce(attrs, function (h, a) {
       if (a) {
         h[a[0]] = a[2];
       }
 
       return h;
-    });
+    }, {});
   },
   /**
    * Translate rules to an associative array.
@@ -21,13 +23,13 @@ var Translator = {
    * @param rx The rules parse tree
    */
   rules: function (rx) {
-    return rx.inject({}, function (h, r) {
+    return _.reduce(rx, function (h, r) {
       if (r) {
         h[r[0]] = r[1];
       }
 
       return h;
-    });
+    }, {});
   }
 };
 
