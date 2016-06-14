@@ -1,8 +1,6 @@
 "use strict";
 
-var Parser = require("parser-generator");
-var Translator = require("./Translator");
-var g = {}, o = Parser.Operators;
+var g = {}, o = require("parser-generator").Operators, t = require("./Translator");
 
 // basic tokens
 g.lbrace = o.token("{");
@@ -21,10 +19,10 @@ g.attrValue = o.token(/[^;\}]+/);
 g.attr = o.each(g.attrName, g.colon, g.attrValue, g.semicolon);
 g.attrList = o.many(o.any(g.comments, g.attr));
 // style rules
-g.style = o.process(o.between(g.lbrace, g.attrList, g.rbrace), Translator.style);
+g.style = o.process(o.between(g.lbrace, g.attrList, g.rbrace), t.style);
 g.selector = o.token(/[^\{]+/);
 g.rule = o.each(g.selector, g.style);
-g.rules = o.process(o.many(o.any(g.comments, g.rule)), Translator.rules);
+g.rules = o.process(o.many(o.any(g.comments, g.rule)), t.rules);
 
 var Grammar = {
   parse: g.rules

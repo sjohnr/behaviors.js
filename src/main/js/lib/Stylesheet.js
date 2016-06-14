@@ -1,6 +1,5 @@
 "use strict";
 
-var http = require("http");
 var $ = require("jquery");
 var _ = require("underscore");
 var _camelize = require("underscore.string/camelize");
