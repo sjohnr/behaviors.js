@@ -26,19 +26,31 @@ The benefit of using BSS is two-fold:
 Usage
 =====
 
-behaviors.js uses [prototype.js](http://prototypejs.org/) 1.6+. Include it in the head of your page, along with [parser-generator.js](https://github.com/sjohnr/parser-generator.js) as follows:
+Include the behaviors.js project in the head of your page, along with [parser-generator.js](https://github.com/sjohnr/parser-generator.js), as follows:
 
 ```html
-<script src="https://ajax.googleapis.com/ajax/libs/prototype/1.7.1.0/prototype.js"></script>
-<script src="https://raw.github.com/sjohnr/parser-generator.js/master/parser-generator.js"></script>
-<script src="https://raw.github.com/sjohnr/behaviors.js/master/behaviors.js"></script>
+<script src="https://github.com/sjohnr/behaviors.js/releases/0.2.0"></script>
 ```
 
-You can load a BSS file pretty much the same way you load a CSS file: with a `<link>` tag. For example:
+For bower:
+
+```
+bower install behaviors
+```
+
+For npm:
+
+```
+npm install behaviors
+```
+
+You can now load a BSS file pretty much the same way you load a CSS file: with a `<link>` tag. For example:
 
 ```html
 <link rel="behaviors" href="my-behaviors.bss" />
 ```
+
+To bundle bss files via webpack, check back soon! I will be adding support for a webpack loader and server-side code generation and other tooling in subsequent releases.
 
 Attributes
 ==========
