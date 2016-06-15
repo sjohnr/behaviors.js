@@ -23,8 +23,7 @@ var Behaviors = {
     _.chain(document.getElementsByTagName("link"))
         .filter(Stylesheet.test)
         .pluck("href")
-        .each(Behaviors.process)
-        .value();
+        .each(Behaviors.process);
   },
   /**
    * Load an individual Behaviors Stylesheet file by URL.
