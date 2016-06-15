@@ -29,7 +29,7 @@ Usage
 Include the behaviors.js project in the head of your page, along with [parser-generator.js](https://github.com/sjohnr/parser-generator.js), as follows:
 
 ```html
-<script src="https://github.com/sjohnr/behaviors.js/releases/0.2.0"></script>
+<script src="https://github.com/sjohnr/behaviors.js/releases/0.2.0/behaviors-min-0.2.0.js"></script>
 ```
 
 For bower:
