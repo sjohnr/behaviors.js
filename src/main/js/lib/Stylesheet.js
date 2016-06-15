@@ -40,7 +40,7 @@ var Stylesheet = {
           e.binding = e;
         }
         _.each(attributes, function(value, name) {
-          var fn = Attributes[_.camelize(name)];
+          var fn = Attributes[_.camelize(name)] || Attributes[name];
           try {
             fn ? fn(e, value, name) : null;
           } catch (ex) {

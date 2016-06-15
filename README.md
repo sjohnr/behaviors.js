@@ -123,7 +123,16 @@ Relative Attributes
 
 Sets a given style attribute relative to another element’s value.
 
-Possible attributes are `height` and `width`.
+Possible attributes are any valid CSS property that takes an absolute or calculated unit of measure (e.g. pixels, ems, percentages). Supported attributes are in the following categories:
+
+* Size: `height`, `width`
+* Box model: `padding`, `padding-top`, `padding-right`, `padding-bottom`, `padding-left`, `margin`, `margin-top`, `margin-right`, `margin-bottom`, `margin-left`
+* Borders: `border-width`, `border-top-width`, `border-right-width`, `border-bottom-width`, `border-left-width`, `outline-width`
+* Display: `opacity`, `z-index`
+* Text: `font-size`, `letter-spacing`, `line-height`, `text-indent`, `word-spacing`
+* Position: `top`, `right`, `bottom`, `left`, `max-height`, `max-width`, `min-height`, `min-width`
+
+The most useful of these are `height` and `width`.
 
 ```javascript
 // make sure the sidebar and body match
@@ -138,7 +147,7 @@ div.body { height: minimum( div.sidebar ) }
 * `maximum ( selector )`
   * Make sure the element attribute is no greater than the first element returned using the given selector.
 * `equals ( selector )`
-  * Make sure the element attribute is equal to the first element returned using the given selector. 
+  * Make sure the element attribute is equal to the first element returned using the given selector.
 
 **Note:** Relative values only work when the values are independent of one another.
 

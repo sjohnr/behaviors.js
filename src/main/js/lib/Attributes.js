@@ -17,7 +17,7 @@ function observe(h, e, v) {
 }
 
 /**
- * Adds relative attributes: height, width ...
+ * Adds relative attributes: height, width, opacity...
  *
  * @param a The attribute name
  * @param e The element
@@ -96,7 +96,7 @@ $w("blur change click dblclick contextmenu focus keydown keypress keyup mousedow
 //
 // Meta functions for maintaining relative size
 //
-$w("height width").each(function(s) {
+$w("height width opacity font-size letter-spacing line-height text-indent word-spacing border-width border-top-width border-right-width border-bottom-width border-left-width outline-width padding padding-top padding-right padding-bottom padding-left margin margin-top margin-right margin-bottom margin-left top right bottom left max-height max-width min-height min-width z-index").each(function(s) {
   Attributes[s] = _.partial(relative, s);
 });
 
