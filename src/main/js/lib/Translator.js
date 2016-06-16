@@ -25,11 +25,7 @@ var Translator = {
   rules: function (rx) {
     return _.reduce(rx, function (h, r) {
       if (r) {
-        if (h[r[0]]) {
-          _.extend(h[r[0]], r[1]);
-        } else {
-          h[r[0]] = r[1];
-        }
+        h[r[0]] = _.extend(h[r[0]] || {}, r[1]);
       }
 
       return h;
