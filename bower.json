@@ -1,0 +1,31 @@
+{
+  "name": "behaviors",
+  "description": "A library for implementing Behaviors Stylesheets (BSS) for attaching behaviors to pages with unobtrusive JavaScript.",
+  "main": "src/main/js/behaviors.js",
+  "authors": [
+    "Stephen Riesenberg <sjohnr@hotmail.com>"
+  ],
+  "license": "MIT",
+  "keywords": [
+    "library",
+    "behaviors",
+    "stylesheets",
+    "bss",
+    "unobtrusive",
+    "javascript"
+  ],
+  "homepage": "https://github.com/sjohnr/behaviors.js",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "^3.0.0",
+    "parser-generator": "^0.2.0",
+    "underscore": "^1.8.3",
+    "underscore.string": "^3.3.4"
+  }
+}
